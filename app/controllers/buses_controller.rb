@@ -21,18 +21,20 @@ class BusesController < ApplicationController
   private
 
   def authenticate!
-    if session_exists? && session_expired?
-      cookies.delete(:current_assignment)
-      session.delete(:contact_id)
+    if Rails.cache.read('cached_user').nil?
+      if session_exists? && session_expired?
+        cookies.delete(:current_assignment)
+        session.delete(:contact_id)
 
-      respond_to do |format|
-        format.html { redirect_to :root, alert: 'Your session has expired.' }
-        format.json { head 401 }
-      end
-    elsif !session[:contact_id]
-      respond_to do |format|
-        format.html { redirect_to :root, alert: 'You need to sign in first.' }
-        format.json { head 401 }
+        respond_to do |format|
+          format.html { redirect_to :root, alert: 'Your session has expired.' }
+          format.json { head 401 }
+        end
+      elsif !session[:contact_id]
+        respond_to do |format|
+          format.html { redirect_to :root, alert: "You need to sign in first." }
+          format.json { head 401 }
+        end
       end
     end
   end

@@ -2,9 +2,9 @@
 #wmsb-logo
 .form-wrapper
   = simple_form_for @session, url: '/login', html: { id: 'login' } do |f|
-    = f.input :family_name
-    = f.input :student_number, type: 'number'
-    = f.input :date_of_birth, as: :date, start_year: 26.years.ago.year, end_year: 2.years.ago.year, order: [:month, :day, :year], include_blank: true
+    = f.input :family_name, input_html: { value: (@credentials[:last_name] if @credentials) }
+    = f.input :student_number, type: 'number', input_html: { value: (@credentials[:student_no] if @credentials) }
+    = f.input :date_of_birth, as: :date, start_year: 26.years.ago.year, end_year: 2.years.ago.year, selected: "1", order: [:month, :day, :year]
     = f.button :submit, value: 'Sign In'
   %span.faq-link
     =link_to 'Questions or problems?', faq_path, target: "_blank"

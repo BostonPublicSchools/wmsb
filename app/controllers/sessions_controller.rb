@@ -2,14 +2,15 @@ class SessionsController < ApplicationController
   before_filter :redirect_to_buses, only: :new
 
   def new
+    @credentials = Rails.cache.read('cached_user')
     @session = ContactId.new
   end
 
   def create
     @session = ContactId.new(params[:contact_id])
-
     if @session.valid? && @session.authenticate!
-      session[:contact_id]   = @session.contact_id
+      session[:contact_id]   = @session
+                                   .contact_id
       session[:signed_in_at] = Time.zone.now.to_s
       session[:current_assignment] = Digest::SHA512.hexdigest(@session.student_number).first(20)
 
@@ -21,6 +22,11 @@ class SessionsController < ApplicationController
   end
 
   def destroy
+    cache = Rails.cache.read('cached_user')
+    Rails.cache.write("cached_user", {last_name: cache[:last_name],
+                                      dob: cache[:dob],
+                                      student_no: cache[:student_no] })
+
     session.delete(:current_assignment)
     session.delete(:contact_id)
     session.delete(:signed_in_at)
