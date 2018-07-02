@@ -35,10 +35,6 @@ class ContactId
       # The response is not a proper JSON object so JSON.parse('"000"') will
       # choke. Remove the quotes.
       @contact_id = response.body.gsub('"', '')
-      Rails.cache.write("cached_user", {last_name: family_name,
-                                        dob: formatted_date_of_birth,
-                                        student_no: student_number })
-
     else
       @errors.add(:aspen_contact_id, "could not be retreived (#{response.status})")
       @contact_id = ''
