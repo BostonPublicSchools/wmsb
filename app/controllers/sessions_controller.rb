@@ -14,7 +14,10 @@ class SessionsController < ApplicationController
       session[:current_assignment] = Digest::SHA512.hexdigest(@session.student_number).first(20)
       cookies[:last_name] = @session.family_name
       cookies[:student_no] = @session.student_number
+      session[:last_name] = @session.family_name
+      session[:student_no] = @session.student_number
       redirect_to buses_path(anchor: session[:current_assignment])
+
     else
       flash.now.alert = 'There was a problem signing you in.'
       render :new
