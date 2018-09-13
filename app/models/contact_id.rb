@@ -17,6 +17,9 @@ class ContactId
 
     @family_name    = @attributes['family_name']
     @student_number = @attributes['student_number']
+    @month = @attributes['date_of_birth(2i)']
+    @date = @attributes['date_of_birth(3i)']
+    @year = @attributes['date_of_birth(1i)']
 
     @errors = ActiveModel::Errors.new(self)
   end

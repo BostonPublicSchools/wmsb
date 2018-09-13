@@ -12,10 +12,13 @@ class SessionsController < ApplicationController
                                    .contact_id
       session[:signed_in_at] = Time.zone.now.to_s
       session[:current_assignment] = Digest::SHA512.hexdigest(@session.student_number).first(20)
-      cookies[:last_name] = @session.family_name
-      cookies[:student_no] = @session.student_number
       session[:last_name] = @session.family_name
       session[:student_no] = @session.student_number
+      cookies[:last_name] = @session.family_name
+      cookies[:student_no] = @session.student_number
+      cookies[:month] = @session.date_of_birth.month
+      cookies[:date] = @session.date_of_birth.day
+      cookies[:year] = @session.date_of_birth.year
       redirect_to buses_path(anchor: session[:current_assignment])
 
     else

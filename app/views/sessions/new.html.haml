@@ -8,3 +8,15 @@
     = f.button :submit, value: 'Sign In'
   %span.faq-link
     =link_to 'Questions or problems?', faq_path, target: "_blank"
+
+:javascript
+  $( document ).ready(function() {
+    if ("#{cookies[:month]}" && "#{cookies[:date]}" && "#{cookies[:year]}"){
+      var month = "#{cookies[:month]}";
+      var date = "#{cookies[:date]}";
+      var year = "#{cookies[:year]}";
+      $('#contact_id_date_of_birth_2i').val(month);
+      $('#contact_id_date_of_birth_3i').val(date);
+      $('#contact_id_date_of_birth_1i').val(year);
+    }
+  });
