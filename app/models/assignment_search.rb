@@ -19,24 +19,29 @@ class AssignmentSearch
   end
 
   def find
-    connection.headers = {BpsToken: ENV['SERVICE_HEADER_KEY']}
-    if trip_flag == "departure"
-      tripflag = "outbound"
-    elsif trip_flag == "arrival"
-      tripflag = "inbound"
-    end
-    response = connection.get(
-        '/BPSRegistrationService/api/Transportation/BusAssignments',
-        clientcode: CLIENT_CODE,
-        studentNo: @aspen_contact_id,
-        tripFlag: tripflag)
+    response_body =  Rails.cache.fetch(cache_key, expires_in: 12.hours) do
+      connection.headers = {BpsToken: ENV['SERVICE_HEADER_KEY']}
+      if trip_flag == "departure"
+        tripflag = "outbound"
+      elsif trip_flag == "arrival"
+        tripflag = "inbound"
+      end
+      binding.pry
+      response = connection.get(
+          '/BPSRegistrationService/api/Transportation/BusAssignments',
+          clientcode: CLIENT_CODE,
+          studentNo: @aspen_contact_id,
+          tripFlag: tripflag
+      )
 
-    if !response.success?
-      @errors.add(:assignments, :missing)
+      if !response.success?
+        @errors.add(:assignments, :missing)
+      end
+      response.success? ? response.body : nil
     end
 
-    if response.body.present?
-      assignments = JSON.parse(response.body)
+    if response_body.present?
+      assignments = JSON.parse(response_body)
       @assignments = assignments.map do |assignment|
         BusAssignment.new(assignment, trip_flag)
       end
