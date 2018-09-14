@@ -3,21 +3,21 @@ class BusAssignment
 
   FAKE_ASSIGNMENT_REGEX = /^9\d{3}$/
 
-  attr_accessor :BusNumber,
+  attr_accessor :BusNo,
                 :StudentNo,
-                :parentfirstname,
-                :parentlastname,
-                :studentfirstname,
-                :studentlastname,
+                :ParentFirstName,
+                :ParentLastName,
+                :StudentFirstName,
+                :StudentLastName,
                 :days,
                 :trip_flag
 
-  alias :bus_number :BusNumber
+  alias :bus_number :BusNo
   alias :student_number :StudentNo
-  alias :parent_first_name :parentfirstname
-  alias :parent_last_name :parentlastname
-  alias :student_first_name :studentfirstname
-  alias :student_last_name :studentlastname
+  alias :parent_first_name :ParentFirstName
+  alias :parent_last_name :ParentLastName
+  alias :student_first_name :StudentFirstName
+  alias :student_last_name :StudentLastName
 
   attr_reader :location, :history
 

@@ -21,11 +21,16 @@ class AssignmentSearch
 
   def find
     connection.headers = {BpsToken: ENV['SERVICE_HEADER_KEY']}
+    if trip_flag == "departure"
+      tripflag = "outbound"
+    elsif trip_flag == "arrival"
+      tripflag = "inbound"
+    end
     response = connection.get(
         '/BPSRegistrationService/api/Transportation/BusAssignments',
         clientcode: CLIENT_CODE,
         studentNo: @student_no,
-        tripFlag: trip_flag == "departure" ? "outbound" : "inbound")
+        tripFlag: tripflag)
 
     if !response.success?
       @errors.add(:assignments, :missing)
