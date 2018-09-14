@@ -3,7 +3,6 @@ class BusesController < ApplicationController
   before_filter :authenticate!
 
   def index
-    binding.pry
     studentNo = session[:student_no]
     search = AssignmentSearch.find(session[:contact_id], studentNo)
 
