@@ -1,5 +1,6 @@
 class AssignmentSearch
   extend ActiveModel::Translation
+  CLIENT_CODE = "wmsb".freeze
 
   class_attribute :connection, instance_writer: false
   self.connection = Faraday.new ENV['BPS_API'], ssl: {
@@ -8,35 +9,30 @@ class AssignmentSearch
 
   attr_reader :assignments, :errors
 
-  def self.find(aspen_contact_id)
-    new(aspen_contact_id).find
+  def self.find(aspen_contact_id, student_no)
+    new(aspen_contact_id, student_no).find
   end
 
-  def initialize(aspen_contact_id)
+  def initialize(aspen_contact_id, student_no)
     @aspen_contact_id = aspen_contact_id
+    @student_no       = student_no
     @errors           = ActiveModel::Errors.new(self)
   end
 
   def find
-    response_body =  Rails.cache.fetch(cache_key, expires_in: 12.hours) do
-      response = connection.get(
-        '/bpswstr/Connect.svc/bus_assignments',
-        aspen_contact_id: @aspen_contact_id,
-        TripFlag: trip_flag,
-        ForThisDate: current_date,
-        UserName: username,
-        Password: password
-      )
+    connection.headers = {BpsToken: ENV['SERVICE_HEADER_KEY']}
+    response = connection.get(
+        '/BPSRegistrationService/api/Transportation/BusAssignments',
+        clientcode: CLIENT_CODE,
+        studentNo: @student_no,
+        tripFlag: trip_flag)
 
-      if !response.success?
-        @errors.add(:assignments, :missing)
-      end
-
-      response.success? ? response.body : nil
+    if !response.success?
+      @errors.add(:assignments, :missing)
     end
 
-    if response_body.present?
-      assignments = JSON.parse(response_body)
+    if response.body.present?
+      assignments = JSON.parse(response.body)
       @assignments = assignments.map do |assignment|
         BusAssignment.new(assignment, trip_flag)
       end
