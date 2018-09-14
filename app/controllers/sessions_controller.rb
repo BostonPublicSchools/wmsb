@@ -8,8 +8,7 @@ class SessionsController < ApplicationController
   def create
     @session = ContactId.new(params[:contact_id])
     if @session.valid? && @session.authenticate!
-      session[:contact_id]   = @session
-                                   .contact_id
+      session[:contact_id]   = @session.contact_id
       session[:signed_in_at] = Time.zone.now.to_s
       session[:current_assignment] = Digest::SHA512.hexdigest(@session.student_number).first(20)
       session[:last_name] = @session.family_name

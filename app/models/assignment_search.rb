@@ -9,13 +9,12 @@ class AssignmentSearch
 
   attr_reader :assignments, :errors
 
-  def self.find(aspen_contact_id, student_no)
-    new(aspen_contact_id, student_no).find
+  def self.find(aspen_contact_id)
+    new(aspen_contact_id).find
   end
 
-  def initialize(aspen_contact_id, student_no)
+  def initialize(aspen_contact_id)
     @aspen_contact_id = aspen_contact_id
-    @student_no       = student_no
     @errors           = ActiveModel::Errors.new(self)
   end
 
@@ -29,7 +28,7 @@ class AssignmentSearch
     response = connection.get(
         '/BPSRegistrationService/api/Transportation/BusAssignments',
         clientcode: CLIENT_CODE,
-        studentNo: @student_no,
+        studentNo: @aspen_contact_id,
         tripFlag: tripflag)
 
     if !response.success?

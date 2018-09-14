@@ -3,8 +3,7 @@ class BusesController < ApplicationController
   before_filter :authenticate!
 
   def index
-    studentNo = session[:student_no]
-    search = AssignmentSearch.find(session[:contact_id], studentNo)
+    search = AssignmentSearch.find(session[:contact_id])
 
     if search.errors.any?
       flash.now.alert = search.errors.messages.values.flatten.first
