@@ -25,7 +25,7 @@ class AssignmentSearch
         '/BPSRegistrationService/api/Transportation/BusAssignments',
         clientcode: CLIENT_CODE,
         studentNo: @student_no,
-        tripFlag: trip_flag)
+        tripFlag: trip_flag == "departure" ? "outbound" : "inbound")
 
     if !response.success?
       @errors.add(:assignments, :missing)
