@@ -26,7 +26,6 @@ class AssignmentSearch
       elsif trip_flag == "arrival"
         tripflag = "inbound"
       end
-      binding.pry
       response = connection.get(
           '/BPSRegistrationService/api/Transportation/BusAssignments',
           clientcode: CLIENT_CODE,
