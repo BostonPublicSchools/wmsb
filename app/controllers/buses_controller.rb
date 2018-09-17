@@ -21,7 +21,7 @@ class BusesController < ApplicationController
   private
 
   def authenticate!
-    if session[:last_name].nil? && session[:student_no].nil?
+    if session[:parentLastName].nil? && session[:studentNo].nil?
       if session_exists? && session_expired?
         cookies.delete(:current_assignment)
         session.delete(:contact_id)

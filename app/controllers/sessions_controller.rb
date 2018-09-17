@@ -10,14 +10,14 @@ class SessionsController < ApplicationController
     if @session.valid? && @session.authenticate!
       session[:contact_id]   = @session.contact_id
       session[:signed_in_at] = Time.zone.now.to_s
-      session[:current_assignment] = Digest::SHA512.hexdigest(@session.student_number).first(20)
-      session[:last_name] = @session.family_name
-      session[:student_no] = @session.student_number
-      cookies[:last_name] = @session.family_name
-      cookies[:student_no] = @session.student_number
-      cookies[:month] = @session.date_of_birth.month
-      cookies[:date] = @session.date_of_birth.day
-      cookies[:year] = @session.date_of_birth.year
+      session[:current_assignment] = Digest::SHA512.hexdigest(@session.studentNo).first(20)
+      session[:parentLastName] = @session.parentLastName
+      session[:studentNo] = @session.studentNo
+      cookies[:parentLastName] = @session.parentLastName
+      cookies[:studentNo] = @session.studentNo
+      cookies[:month] = @session.studentDob.month
+      cookies[:date] = @session.studentDob.day
+      cookies[:year] = @session.studentDob.year
       redirect_to buses_path(anchor: session[:current_assignment])
 
     else

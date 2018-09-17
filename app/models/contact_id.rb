@@ -5,34 +5,33 @@ class ContactId
 
   class_attribute :connection, instance_writer: false
   self.connection = Faraday.new ENV['BPS_API'], ssl: {
-    ca_file: Rails.root.join('lib', 'certs', 'SVRIntlG3.crt').to_s
+      ca_file: Rails.root.join('lib', 'certs', 'SVRIntlG3.crt').to_s
   }
+  attr_reader :contact_id, :errors, :parentLastName, :studentNo
 
-  attr_reader :contact_id, :errors, :family_name, :student_number
-
-  validates :family_name, :student_number, :date_of_birth, presence: true
+  validates :parentLastName, :studentNo, :studentDob, presence: true
 
   def initialize(attributes = {})
     @attributes = attributes
 
-    @family_name    = @attributes['family_name']
-    @student_number = @attributes['student_number']
-    @month = @attributes['date_of_birth(2i)']
-    @date = @attributes['date_of_birth(3i)']
-    @year = @attributes['date_of_birth(1i)']
+    @parentLastName    = @attributes['parentLastName']
+    @studentNo = @attributes['studentNo']
+    @month = @attributes['studentDob(2i)']
+    @date = @attributes['studentDob(3i)']
+    @year = @attributes['studentDob(1i)']
 
     @errors = ActiveModel::Errors.new(self)
   end
 
   def authenticate!
+
+    connection.headers = {BpsToken: ENV['SERVICE_HEADER_KEY']}
     response = connection.get(
-      '/bpswstr/Connect.svc/aspen_contact_id',
-      last_name: family_name,
-      student_no: student_number,
-      dob: formatted_date_of_birth,
-      UserName: username,
-      Password: password
-    )
+        '/BPSRegistrationService/api/Transportation/ValidStudent',
+        parentLastName: parentLastName,
+        studentNo: studentNo,
+        studentDob: formatted_date_of_birth,
+        )
 
     if response.success?
       # The response is not a proper JSON object so JSON.parse('"000"') will
@@ -46,18 +45,18 @@ class ContactId
     @contact_id.present?
   end
 
-  def date_of_birth
-    @date_of_birth ||= Time.zone.local(
-      @attributes['date_of_birth(1i)'].to_i,
-      @attributes['date_of_birth(2i)'].to_i,
-      @attributes['date_of_birth(3i)'].to_i
+  def studentDob
+    @studentDob ||= Time.zone.local(
+        @attributes['studentDob(1i)'].to_i,
+        @attributes['studentDob(2i)'].to_i,
+        @attributes['studentDob(3i)'].to_i
     )
   rescue
     nil
   end
 
   def formatted_date_of_birth
-    date_of_birth.strftime('%m/%d/%Y')
+    studentDob.strftime('%m/%d/%Y')
   end
 
   def persisted?
