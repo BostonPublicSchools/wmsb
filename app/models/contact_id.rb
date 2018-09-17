@@ -3,6 +3,8 @@ class ContactId
   include ActiveModel::Conversion
   include ActiveModel::Validations
 
+  CLIENT_CODE = "wmsb".freeze
+
   class_attribute :connection, instance_writer: false
   self.connection = Faraday.new ENV['BPS_API'], ssl: {
       ca_file: Rails.root.join('lib', 'certs', 'SVRIntlG3.crt').to_s
@@ -24,10 +26,10 @@ class ContactId
   end
 
   def authenticate!
-
     connection.headers = {BpsToken: ENV['SERVICE_HEADER_KEY']}
     response = connection.get(
         '/BPSRegistrationService/api/Transportation/ValidStudent',
+        clientcode: CLIENT_CODE,
         parentLastName: parentLastName,
         studentNo: studentNo,
         studentDob: formatted_date_of_birth,
