@@ -26,7 +26,7 @@ class AssignmentSearch
       elsif trip_flag == "arrival"
         tripflag = "inbound"
       end
-      response = connection.get(
+      response = connection.post(
           '/BPSRegistrationService/api/Transportation/BusAssignments',
           clientcode: CLIENT_CODE,
           studentNo: @aspen_contact_id,
@@ -40,14 +40,25 @@ class AssignmentSearch
     end
 
     if response_body.present?
+      response_assignments = []
+      response_array = []
       assignments = JSON.parse(response_body)
-      @assignments = assignments.map do |assignment|
+      assignments.map do |assignment|
+        if assignment[1].is_a? Array
+          assignment[1].each do |a|
+            response_assignments << a
+          end
+        else
+          response_assignments << assignment[1]
+        end
+      end
+      response_array << response_assignments.inject({}) { |aggregate, hash| aggregate.merge hash }
+      @assignments = response_array.map do |assignment|
         BusAssignment.new(assignment, trip_flag)
       end
     else
       @assignments = []
     end
-
     return self
   end
 
@@ -58,7 +69,7 @@ class AssignmentSearch
   def assignments_without_gps_data
     assignments.reject(&:gps_available?)
   end
-
+[1]
   alias :read_attribute_for_validation :send
 
   private

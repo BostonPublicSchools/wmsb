@@ -27,7 +27,7 @@ class ContactId
 
   def authenticate!
     connection.headers = {BpsToken: ENV['SERVICE_HEADER_KEY']}
-    response = connection.get(
+    response = connection.post(
         '/BPSRegistrationService/api/Transportation/ValidStudent',
         clientcode: CLIENT_CODE,
         parentLastName: parentLastName,
