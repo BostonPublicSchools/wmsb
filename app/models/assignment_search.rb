@@ -69,7 +69,7 @@ class AssignmentSearch
   def assignments_without_gps_data
     assignments.reject(&:gps_available?)
   end
-[1]
+
   alias :read_attribute_for_validation :send
 
   private
