@@ -44,7 +44,7 @@
     - if GOOGLE_ANALYTICS
       = render 'layouts/google_analytics'
 
-    - if session[:last_name].present? && session[:student_no].present?
+    - if session[:parentLastName].present? && session[:studentNo].present?
       :javascript
           idleTimer = function() {
             var t;
