@@ -67,7 +67,9 @@ Wmsb.Views.MapView = Backbone.View.extend
     @renderHeader()
     @renderMarker()
 
-    @intervalID ||= setInterval @refreshAssignments, 30000
+
+    @intervalID ||= setInterval @refreshAssignments, $('#map-interval').data('map-timeout')
+    console.log($('#map-interval').data('map-timeout'))
 
   renderMap: ->
     @map = new google.maps.Map @mapEl, {
