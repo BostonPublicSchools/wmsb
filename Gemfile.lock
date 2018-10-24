@@ -110,6 +110,8 @@ GEM
       activesupport (= 3.2.16)
       bundler (~> 1.0)
       railties (= 3.2.16)
+    rails_autoscale_agent (0.4.0)
+      activesupport (>= 3.2)
     railties (3.2.16)
       actionpack (= 3.2.16)
       activesupport (= 3.2.16)
@@ -180,6 +182,7 @@ DEPENDENCIES
   puma
   rack-cache
   rails (= 3.2.16)
+  rails_autoscale_agent
   rspec-rails (~> 2.14.0)
   sass-rails (~> 3.2.3)
   simple_form

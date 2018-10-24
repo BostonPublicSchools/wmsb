@@ -10,6 +10,7 @@ gem 'puma'
 gem 'dalli'
 gem 'simple_form'
 gem 'rack-cache'
+gem 'rails_autoscale_agent'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
