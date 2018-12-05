@@ -5,7 +5,10 @@
 %script#locations{ type: 'text/json' }
   #{ @assignments.to_json }
 
-#map-canvas
+- if @assignments.object.present?
+  #map-canvas
+- else
+  %h1{style: "text-align: center; font-size: 30px; color:#fff"} Bus is currently not active!
 
 #map-interval{"data-map-timeout" => "#{ENV['MAP_INTERVAL']}", :style => "display:none;"}
 
