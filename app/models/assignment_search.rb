@@ -42,24 +42,18 @@ class AssignmentSearch
       response_assignments = []
       response_array = []
       assignments = JSON.parse(response_body)
-      @start_time = DateTime.parse(assignments['Bus']['StartTime']).utc if assignments['Bus']['StartTime'].present?
-      @current_time = DateTime.now.utc
-      if assignments['Bus']['StartTime'].present? && @start_time > @current_time
-        assignments.map do |assignment|
-          if assignment[1].is_a? Array
-            assignment[1].each do |a|
-              response_assignments << a
-            end
-          else
-            response_assignments << assignment[1]
+      assignments.map do |assignment|
+        if assignment[1].is_a? Array
+          assignment[1].each do |a|
+            response_assignments << a
           end
+        else
+          response_assignments << assignment[1]
         end
-        response_array << response_assignments.inject({}) { |aggregate, hash| aggregate.merge hash }
-        @assignments = response_array.map do |assignment|
-          BusAssignment.new(assignment, trip_flag)
-        end
-      else
-        @assignments = []
+      end
+      response_array << response_assignments.inject({}) { |aggregate, hash| aggregate.merge hash }
+      @assignments = response_array.map do |assignment|
+        BusAssignment.new(assignment, trip_flag)
       end
     else
       @assignments = []
