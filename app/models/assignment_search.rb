@@ -38,6 +38,7 @@ class AssignmentSearch
       end
       response.success? ? response.body : nil
     end
+
     if response_body.present?
       response_assignments = []
       response_array = []
