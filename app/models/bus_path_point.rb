@@ -16,4 +16,8 @@ class BusPathPoint
   def last_updated_at
     @last_updated_at ||= Time.zone.parse(time)
   end
+
+  def time_difference
+    @time_difference = Time.zone.now
+  end
 end

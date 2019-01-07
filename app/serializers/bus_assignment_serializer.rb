@@ -10,6 +10,7 @@ class BusAssignmentSerializer < ActiveModel::Serializer
              :latitude,
              :longitude,
              :last_updated_at,
+             :time_difference,
              :destination,
              :history
 
@@ -19,6 +20,10 @@ class BusAssignmentSerializer < ActiveModel::Serializer
 
   def last_updated_at
     object.last_updated_at.strftime('%b %e, %l:%M %P')
+  end
+
+  def time_difference
+    (object.time_difference - object.last_updated_at).round(2) > 300.0 ? 'true' : 'false'
   end
 
   def destination
