@@ -10,8 +10,8 @@ class BusAssignmentSerializer < ActiveModel::Serializer
              :latitude,
              :longitude,
              :last_updated_at,
-             :time_difference,
              :destination,
+             :time_difference,
              :history
 
   def token
@@ -23,7 +23,7 @@ class BusAssignmentSerializer < ActiveModel::Serializer
   end
 
   def time_difference
-    (object.time_difference - object.last_updated_at).round(2) > 300.0 ? 'true' : 'false'
+    (object.current_time - object.last_updated_at).round(2) > ENV['ZONAR_ALERT_TIME'].to_f ? 'true' : 'false'
   end
 
   def destination

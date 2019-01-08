@@ -21,7 +21,7 @@ class BusAssignment
 
   attr_reader :location, :history
 
-  delegate :longitude, :latitude, :last_updated_at, :time_difference, to: :location
+  delegate :longitude, :latitude, :last_updated_at, :current_time, to: :location
 
   def initialize(attributes, trip_flag)
     attributes.each do |attr, value|

@@ -4,7 +4,8 @@ class BusLocation
                 :lat,
                 :heading,
                 :speed,
-                :time
+                :time,
+                :current_time
 
   alias :bus_id :fleet
   alias :longitude :long
@@ -18,5 +19,9 @@ class BusLocation
 
   def last_updated_at
     @last_updated_at ||= Time.zone.parse(time)
+  end
+
+  def current_time
+    @current_time ||= Time.zone.now
   end
 end
