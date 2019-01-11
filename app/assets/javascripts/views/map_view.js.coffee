@@ -17,7 +17,7 @@ assignmentList = _.template """
   <div class="header-info time">
     <h4 class="small-text">Last updated:</h4>
     <h2 class="<%= current.escape("time_difference") == "true" ? 'last_updated_content' : '' %>"> <%= current.escape("last_updated_at") %></h2>
-    <%= current.escape("time_difference") == "true" ? '<div class="last_updated_content">GPS tracker is experiencing delay. Zonar is investigating.</div>' : '' %>
+    <%= current.escape("time_difference") == "true" ? "<div class='last_updated_content'>Your bus's GPS tracker is experiencing delays. We apologize for any inconvenience.</div>" : '' %>
   </div>
   <div class="header-info bus-number">
     <h4 class="small-text">Bus number:</h4>
