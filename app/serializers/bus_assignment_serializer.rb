@@ -23,7 +23,8 @@ class BusAssignmentSerializer < ActiveModel::Serializer
   end
 
   def time_difference
-    (object.current_time - object.last_updated_at).round(2) > ENV['ZONAR_ALERT_TIME'].to_f ? 'true' : 'false'
+    current_time = Time.zone.now
+    (current_time - object.last_updated_at).round(2) > ENV['ZONAR_ALERT_TIME'].to_f ? 'true' : 'false'
   end
 
   def destination
