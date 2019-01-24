@@ -38,7 +38,6 @@ module Zonar
   end
 
   def self.bus_history(bus_id)
-    binding.pry
     params = default_params.merge(
       action: :showposition,
       type: :Standard,
