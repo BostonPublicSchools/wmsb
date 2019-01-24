@@ -10,17 +10,21 @@ module Zonar
     password: ENV['ZONAR_PASSWORD'],
   }
 
-  def self.bus_location(bus_id)
+  def self.bus_location(bus_id, buses_rake_task = nil)
     params = default_params.merge(
-      action: :showposition,
-      type: :Standard,
-      logvers: 3,
-      operation: :current,
-      format: :xml,
-      reqtype: :fleet,
-      target: bus_id
+        action: :showposition,
+        type: :Standard,
+        logvers: 3,
+        operation: :current,
+        format: :xml,
+        reqtype: :fleet,
+        target: bus_id
     )
+    response_body = cached_response(:locations, bus_id, params)
 
+    if buses_rake_task == "true"
+      return response_body
+    end
     response_body = cached_response(:locations, bus_id, params)
 
     if !response_body.nil?
@@ -34,6 +38,7 @@ module Zonar
   end
 
   def self.bus_history(bus_id)
+    binding.pry
     params = default_params.merge(
       action: :showposition,
       type: :Standard,
