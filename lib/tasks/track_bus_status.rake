@@ -33,7 +33,7 @@ puts "\nProcess started at = #{Time.now}"
         zonar_time = response_attributes['currentlocations']['asset']['time'].to_datetime.in_time_zone("Eastern Time (US & Canada)")
         latitude = response_attributes['currentlocations']['asset']['lat']
         longitude = response_attributes['currentlocations']['asset']['long']
-        success_rows << [success_count += 1, bus_id, current_time, zonar_time,  (current_time - zonar_time).round(2) > ENV['BUSES_THRESHOLD_TIME']? 'YES' : 'NO', latitude, longitude]
+        success_rows << [success_count += 1, bus_id, current_time, zonar_time,  (current_time - zonar_time).round(2) > ENV['BUSES_THRESHOLD_TIME'].to_f ? 'YES' : 'NO', latitude, longitude]
         sleep 2
       end
     end
