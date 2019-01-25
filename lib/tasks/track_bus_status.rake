@@ -1,5 +1,4 @@
 require 'terminal-table'
-require 'zonar'
 desc 'Track the status of buses by importing the list'
 # file = File.open('buses_list.text', "w")
 # old_out = $stdout
