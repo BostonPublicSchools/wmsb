@@ -1,15 +1,15 @@
 require 'terminal-table'
 $rails_rake_task = true
 desc 'Track the status of buses by importing the list'
-# file = File.open('buses_list.text', "w")
-# old_out = $stdout
-# $stdout = file
+file = File.open('buses_list.text', "w")
+old_out = $stdout
+$stdout = file
 puts "\nTASK: Track the status of all buses by importing the list"
 puts "\nProcess started at = #{Time.now}"
   task track_bus_status: :environment do
     default_params = {
-                          username: ENV['ZONAR_USERNAME'],
-                          password: ENV['ZONAR_PASSWORD'],
+                          username: 'code4america',
+                          password: 'code4america'
                       }
     Zonar.connection.params.merge!(default_params)
     success_rows = []
@@ -24,7 +24,7 @@ puts "\nProcess started at = #{Time.now}"
       if response_attributes.try(:[],'currentlocations').nil?
         failed_rows << [failed_count +=1, bus_id, "CurrentLocation is missing inside Response attributes"]
         next
-      elsif response_attributes.try(:[],'currentlocations').try(:[], 'asset'.nil?)
+      elsif response_attributes.try(:[],'currentlocations').try(:[], 'asset').nil?
         failed_rows << [failed_count +=1, bus_id, "Asset is missing inside Response attributes"]
         next
       elsif response_attributes.try(:[], 'currentlocations').try(:[],'asset').try(:[],'time').nil?
@@ -43,7 +43,7 @@ puts "\nProcess started at = #{Time.now}"
     failed_table = Terminal::Table.new :title => "Failed", :headings => ['No', 'Bus', 'Error'], :rows => failed_rows
     puts "\n#{failed_table}"
     puts "\n\nCompleted process at #{Time.zone.now}"
-    # file.close
-    # $stdout = old_out
+    file.close
+    $stdout = old_out
 end
 
