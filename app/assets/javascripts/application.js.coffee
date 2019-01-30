@@ -6,6 +6,7 @@
 
 #= require underscore
 #= require backbone
+#= require mapbox-gl
 
 #= require wmsb
 #= require notification

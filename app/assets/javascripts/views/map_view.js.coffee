@@ -35,30 +35,32 @@ Wmsb.Views.MapView = Backbone.View.extend
     'click .select-students': 'toggleAssignmentList'
     'click .student-name': 'changeSelectedAssignment'
 
-  styles: [
-    stylers: [
-      { "saturation": -30 }
-      { "lightness": 31 }
-      { "weight": 0.4 }
-      { "gamma": 0.78 }
-      { "hue": "#3b97d3" }
-    ]
-  ]
+#  styles: [
+#    stylers: [
+#      { "saturation": -30 }
+#      { "lightness": 31 }
+#      { "weight": 0.4 }
+#      { "gamma": 0.78 }
+#      { "hue": "#3b97d3" }
+#    ]
+#  ]
 
   points: []
 
-  styledMap: ->
-    new google.maps.StyledMapType @styles, name: 'Boston Public Schools'
+  mapboxgl.accessToken = 'pk.eyJ1Ijoid21zYiIsImEiOiJjanI3emJ2d2YwMHZ3NDNuMGk2MHIxdnUzIn0.jHizbQD5eE9GmnP0y1w2Ng'
+
+#  styledMap: ->
+#    new google.maps.StyledMapType @styles, name: 'Boston Public Schools'
 
   mapCenter: ->
     current = @collection.current()
-    if current? then current.get('latLng') else new google.maps.LatLng(42.3583, -71.0603)
+    if current? then current.get('latLng') else new mapboxgl.Marker().setLngLat([42.3583, -71.0603])
 
   initialize: (options) ->
     _.bindAll this
 
     @busView    = @$('#bus-view')
-    @mapEl      = document.getElementById 'map-canvas'
+    @container      ='map-canvas'
 
     @listenTo @collection, 'reset', @render
 
@@ -73,15 +75,16 @@ Wmsb.Views.MapView = Backbone.View.extend
     console.log($('#map-interval').data('map-timeout'))
 
   renderMap: ->
-    @map = new google.maps.Map @mapEl, {
+    @map = new mapboxgl.Map {
+      container: @container
+      style: 'mapbox://styles/mapbox/streets-v11'
       center: @mapCenter()
-      zoom: 14
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      zoom: 13
       disableDefaultUI: true
       panControl: !Modernizr.touch
       zoomControl: true
     }
-    @map.mapTypes.set 'wmsb', @styledMap()
+    @map.mapTypes.set 'wmsb' #@styledMap()
 
   renderHeader: ->
     markup = assignmentList
@@ -99,22 +102,24 @@ Wmsb.Views.MapView = Backbone.View.extend
       @points.length = 0
 
     _.each @collection.current().get('history'), (point) =>
-      latLng = new google.maps.LatLng point.lat, point.lng
+      latLng = new mapboxgl.Marker().setLngLat([42.3583, -71.0603])
 
-      point = new google.maps.Marker
-        position: latLng
-        icon: '/assets/dot.png'
 
-      point.setMap @map
-      @points.push point
+    center = @collection.current().getLngLat('latLng')
+#    @marker = new google.maps.Marker
+#      position: center
+#      map: @map
+#      title: @collection.current().get 'student_name'
+#      icon: '/assets/bus-marker.svg'
+#      zIndex: google.maps.Marker.MAX_ZINDEX
 
-    center = @collection.current().get 'latLng'
-    @marker = new google.maps.Marker
-      position: center
-      map: @map
-      title: @collection.current().get 'student_name'
-      icon: '/assets/bus-marker.svg'
-      zIndex: google.maps.Marker.MAX_ZINDEX
+    @popup = new mapboxgl.Popup()
+    .setHTML('<h3>Reykjavik Roasters</h3><p>A good coffee shop</p>');
+
+    marker = (new (mapboxgl.Marker)).setLngLat([
+      -21.92661562
+      64.14356426
+    ]).setPopup(popup).addTo(@map)
 
     @map.setCenter center
 
