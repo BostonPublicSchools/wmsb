@@ -30,7 +30,10 @@ assignmentList = _.template """
 </div>
   """
 
+
+
 Wmsb.Views.MapView = Backbone.View.extend
+
   events:
     'click .select-students': 'toggleAssignmentList'
     'click .student-name': 'changeSelectedAssignment'
@@ -47,14 +50,15 @@ Wmsb.Views.MapView = Backbone.View.extend
 
   points: []
 
-  mapboxgl.accessToken = 'pk.eyJ1Ijoid21zYiIsImEiOiJjanI3emJ2d2YwMHZ3NDNuMGk2MHIxdnUzIn0.jHizbQD5eE9GmnP0y1w2Ng'
 
 #  styledMap: ->
 #    new google.maps.StyledMapType @styles, name: 'Boston Public Schools'
 
   mapCenter: ->
+    debugger
     current = @collection.current()
-    if current? then current.get('latLng') else new mapboxgl.Marker().setLngLat([42.3583, -71.0603])
+    if current? then current.get('latLng') else new mapboxgl.LngLat(-71.0603, 42.3583)
+
 
   initialize: (options) ->
     _.bindAll this
@@ -79,12 +83,11 @@ Wmsb.Views.MapView = Backbone.View.extend
       container: @container
       style: 'mapbox://styles/mapbox/streets-v11'
       center: @mapCenter()
-      zoom: 13
-      disableDefaultUI: true
-      panControl: !Modernizr.touch
-      zoomControl: true
+      zoom: 14
     }
-    @map.mapTypes.set 'wmsb' #@styledMap()
+    #    @map.mapTypes.set 'wmsb' #@styledMap()
+    #Add zoom and rotation controls to the map.
+    @map.addControl(new mapboxgl.NavigationControl());
 
   renderHeader: ->
     markup = assignmentList
@@ -93,35 +96,58 @@ Wmsb.Views.MapView = Backbone.View.extend
     @busView.html markup
 
   renderMarker: ->
-    @marker?.setMap null
-
-    if @points.length != 0
-      _.each @points, (point) ->
-        point.setMap null
-
-      @points.length = 0
+#    @marker?.setMap null
+#
+#    if @points.length != 0
+#      _.each @points, (point) ->
+#        point.setMap null
+#
+#      @points.length = 0
 
     _.each @collection.current().get('history'), (point) =>
-      latLng = new mapboxgl.Marker().setLngLat([42.3583, -71.0603])
+      latLng = new mapboxgl.LngLat(point.lng, point.lat)
+
+    #      point = new mapboxgl.Map.Marker
+    #        position: latLng
+    #        icon: '/assets/dot.png'
+    #
+    #      point.setMap @map
+    #      @points.push point
+
+    center = @collection.current().get 'latLng'
+    #    @marker = new mapboxgl.Marker
+    #      position: center
+    #      map: @map
+    #      title: @collection.current().get 'student_name'
+    #      icon: '/assets/bus-marker.svg'
+    popup = new mapboxgl.Popup()
+    .setHTML(@collection.current().get 'student_name');
+
+    @marker = (new (mapboxgl.Marker)).setLngLat(center).setPopup(popup).addTo(@map)
+
+    #    @marker = new google.maps.Marker
+    #    position: center
+    #    map: @map
+    #    title: @collection.current().get 'student_name'
+    #    icon: '/assets/bus-marker.svg'
+    #    zIndex: google.maps.Marker.MAX_ZINDEX
 
 
-    center = @collection.current().getLngLat('latLng')
+    #    @popup = new mapboxgl.Popup()
+    #    .setHTML('<h3>Reykjavik Roasters</h3><p>A good coffee shop</p>');
+
+    #    @marker = (new (mapboxgl.Marker)).setLngLat([
+    #      -71.0603, 42.3583
+    #    ]).setPopup(@popup)
+
+    @map.setCenter center
+
 #    @marker = new google.maps.Marker
 #      position: center
 #      map: @map
 #      title: @collection.current().get 'student_name'
 #      icon: '/assets/bus-marker.svg'
-#      zIndex: google.maps.Marker.MAX_ZINDEX
-
-    @popup = new mapboxgl.Popup()
-    .setHTML('<h3>Reykjavik Roasters</h3><p>A good coffee shop</p>');
-
-    marker = (new (mapboxgl.Marker)).setLngLat([
-      -21.92661562
-      64.14356426
-    ]).setPopup(popup).addTo(@map)
-
-    @map.setCenter center
+#      zIndex: google.maps.Marker.MAX_ZIND
 
   toggleAssignmentList: ->
     @$('.student-names').toggleClass 'closed'
@@ -145,3 +171,4 @@ Wmsb.Views.MapView = Backbone.View.extend
     window.location.hash = assignment.get('token')
 
     @render()
+
