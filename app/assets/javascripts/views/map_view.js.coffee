@@ -31,7 +31,6 @@ assignmentList = _.template """
   """
 
 
-
 Wmsb.Views.MapView = Backbone.View.extend
 
   events:
@@ -55,7 +54,6 @@ Wmsb.Views.MapView = Backbone.View.extend
 #    new google.maps.StyledMapType @styles, name: 'Boston Public Schools'
 
   mapCenter: ->
-    debugger
     current = @collection.current()
     if current? then current.get('latLng') else new mapboxgl.LngLat(-71.0603, 42.3583)
 
@@ -107,12 +105,15 @@ Wmsb.Views.MapView = Backbone.View.extend
     _.each @collection.current().get('history'), (point) =>
       latLng = new mapboxgl.LngLat(point.lng, point.lat)
 
-    #      point = new mapboxgl.Map.Marker
-    #        position: latLng
-    #        icon: '/assets/dot.png'
-    #
-    #      point.setMap @map
-    #      @points.push point
+#    point = new mapboxgl.Marker.setLngLat(latLng)
+
+
+#    point = new google.maps.Marker
+#      position: latLng
+#      icon: '/assets/dot.png'
+#
+#      point.setMap @map
+#      @points.push point
 
     center = @collection.current().get 'latLng'
     #    @marker = new mapboxgl.Marker
@@ -123,7 +124,17 @@ Wmsb.Views.MapView = Backbone.View.extend
     popup = new mapboxgl.Popup()
     .setHTML(@collection.current().get 'student_name');
 
-    @marker = (new (mapboxgl.Marker)).setLngLat(center).setPopup(popup).addTo(@map)
+    el = document.createElement('div');
+    el.className = 'marker';
+
+#new mapboxgl.Marker(el)
+#  .setLngLat(marker.geometry.coordinates)
+#  .addTo(@map);
+#
+
+    @marker = new mapboxgl.Marker(el)
+              .setLngLat(center).setPopup(popup)
+              .addTo(@map)
 
     #    @marker = new google.maps.Marker
     #    position: center
