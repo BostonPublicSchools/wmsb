@@ -19,6 +19,15 @@
   cursor: pointer;
 }
 
+.marker-dots {
+  background-image: url('/assets/dot.png');
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
 .mapboxgl-canary {
   background-color: salmon;
 }

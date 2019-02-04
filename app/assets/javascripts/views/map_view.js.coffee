@@ -55,7 +55,7 @@ Wmsb.Views.MapView = Backbone.View.extend
 
   mapCenter: ->
     current = @collection.current()
-    if current? then current.get('latLng') else new mapboxgl.LngLat(-71.0603, 42.3583)
+    if current? then current.get('Lnglat') else new mapboxgl.LngLat(-71.0603, 42.3583)
 
 
   initialize: (options) ->
@@ -96,17 +96,21 @@ Wmsb.Views.MapView = Backbone.View.extend
   renderMarker: ->
 #    @marker?.setMap null
 #
-#    if @points.length != 0
-#      _.each @points, (point) ->
+    ell = document.createElement('div');
+    ell.className = 'marker-dots';
+
+    if @points.length != 0
+      _.each @points, (point) ->
 #        point.setMap null
 #
-#      @points.length = 0
+      @points.length = 0
 
     _.each @collection.current().get('history'), (point) =>
-      latLng = new mapboxgl.LngLat(point.lng, point.lat)
+      Lnglat = new mapboxgl.LngLat(point.lng, point.lat)
 
-#    point = new mapboxgl.Marker.setLngLat(latLng)
-
+      point = new mapboxgl.Marker(ell)
+          .setLngLat(Lnglat)
+          .addTo(@map)
 
 #    point = new google.maps.Marker
 #      position: latLng
@@ -115,7 +119,8 @@ Wmsb.Views.MapView = Backbone.View.extend
 #      point.setMap @map
 #      @points.push point
 
-    center = @collection.current().get 'latLng'
+
+    center = @collection.current().get 'Lnglat'
     #    @marker = new mapboxgl.Marker
     #      position: center
     #      map: @map
@@ -127,11 +132,6 @@ Wmsb.Views.MapView = Backbone.View.extend
     el = document.createElement('div');
     el.className = 'marker';
 
-#new mapboxgl.Marker(el)
-#  .setLngLat(marker.geometry.coordinates)
-#  .addTo(@map);
-#
-
     @marker = new mapboxgl.Marker(el)
               .setLngLat(center).setPopup(popup)
               .addTo(@map)
@@ -142,14 +142,6 @@ Wmsb.Views.MapView = Backbone.View.extend
     #    title: @collection.current().get 'student_name'
     #    icon: '/assets/bus-marker.svg'
     #    zIndex: google.maps.Marker.MAX_ZINDEX
-
-
-    #    @popup = new mapboxgl.Popup()
-    #    .setHTML('<h3>Reykjavik Roasters</h3><p>A good coffee shop</p>');
-
-    #    @marker = (new (mapboxgl.Marker)).setLngLat([
-    #      -71.0603, 42.3583
-    #    ]).setPopup(@popup)
 
     @map.setCenter center
 
