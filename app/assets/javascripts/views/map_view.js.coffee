@@ -83,6 +83,7 @@ Wmsb.Views.MapView = Backbone.View.extend
       center: @mapCenter()
       zoom: 14
     }
+
     #    @map.mapTypes.set 'wmsb' #@styledMap()
     #Add zoom and rotation controls to the map.
     @map.addControl(new mapboxgl.NavigationControl());
@@ -94,63 +95,52 @@ Wmsb.Views.MapView = Backbone.View.extend
     @busView.html markup
 
   renderMarker: ->
-#    @marker?.setMap null
-#
-    ell = document.createElement('div');
-    ell.className = 'marker-dots';
 
+#    @marker?.setMap null
+
+#    custom_point = new mapboxgl.Marker()
+#                   .addTo(@map)
+#
     if @points.length != 0
       _.each @points, (point) ->
-#        point.setMap null
-#
+#        @map.addLayer (null)
+
       @points.length = 0
+#
+    el = document.createElement('div');
+    el.className = 'marker'
+
+    ell = document.createElement('div');
+    ell.className = 'marker-dots'
 
     _.each @collection.current().get('history'), (point) =>
       Lnglat = new mapboxgl.LngLat(point.lng, point.lat)
 
       point = new mapboxgl.Marker(ell)
-          .setLngLat(Lnglat)
-          .addTo(@map)
+        .addTo(@map)
 
-#    point = new google.maps.Marker
-#      position: latLng
-#      icon: '/assets/dot.png'
+      @points.push point
+
+#      point = new google.maps.Marker
+#        position: latLng
+#        icon: '/assets/dot.png'
 #
 #      point.setMap @map
+
+#      @points.push point
+
 #      @points.push point
 
 
     center = @collection.current().get 'Lnglat'
-    #    @marker = new mapboxgl.Marker
-    #      position: center
-    #      map: @map
-    #      title: @collection.current().get 'student_name'
-    #      icon: '/assets/bus-marker.svg'
     popup = new mapboxgl.Popup()
     .setHTML(@collection.current().get 'student_name');
-
-    el = document.createElement('div');
-    el.className = 'marker';
 
     @marker = new mapboxgl.Marker(el)
               .setLngLat(center).setPopup(popup)
               .addTo(@map)
 
-    #    @marker = new google.maps.Marker
-    #    position: center
-    #    map: @map
-    #    title: @collection.current().get 'student_name'
-    #    icon: '/assets/bus-marker.svg'
-    #    zIndex: google.maps.Marker.MAX_ZINDEX
-
     @map.setCenter center
-
-#    @marker = new google.maps.Marker
-#      position: center
-#      map: @map
-#      title: @collection.current().get 'student_name'
-#      icon: '/assets/bus-marker.svg'
-#      zIndex: google.maps.Marker.MAX_ZIND
 
   toggleAssignmentList: ->
     @$('.student-names').toggleClass 'closed'
