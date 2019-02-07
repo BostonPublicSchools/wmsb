@@ -23,7 +23,7 @@ puts "\nProcess started at = #{Time.now}"
       if response_attributes.try(:[],'currentlocations').nil?
         failed_rows << [failed_count +=1, bus_id, "CurrentLocation is missing inside Response attributes"]
         next
-      elsif response_attributes.try(:[],'currentlocations').try(:[], 'asset'.nil?)
+      elsif response_attributes.try(:[],'currentlocations').try(:[], 'asset').nil?
         failed_rows << [failed_count +=1, bus_id, "Asset is missing inside Response attributes"]
         next
       elsif response_attributes.try(:[], 'currentlocations').try(:[],'asset').try(:[],'time').nil?
