@@ -37,21 +37,7 @@ Wmsb.Views.MapView = Backbone.View.extend
     'click .select-students': 'toggleAssignmentList'
     'click .student-name': 'changeSelectedAssignment'
 
-#  styles: [
-#    stylers: [
-#      { "saturation": -30 }
-#      { "lightness": 31 }
-#      { "weight": 0.4 }
-#      { "gamma": 0.78 }
-#      { "hue": "#3b97d3" }
-#    ]
-#  ]
-
   points: []
-
-
-#  styledMap: ->
-#    new google.maps.StyledMapType @styles, name: 'Boston Public Schools'
 
   mapCenter: ->
     current = @collection.current()
@@ -84,7 +70,6 @@ Wmsb.Views.MapView = Backbone.View.extend
       zoom: 14
     }
 
-    #    @map.mapTypes.set 'wmsb' #@styledMap()
     #Add zoom and rotation controls to the map.
     @map.addControl(new mapboxgl.NavigationControl());
 
@@ -95,52 +80,48 @@ Wmsb.Views.MapView = Backbone.View.extend
     @busView.html markup
 
   renderMarker: ->
+    console.log("Inside render Marker");
+    debugger
+#    @marker = (new (mapboxgl.Marker))
+#      .setLngLat([-71.0603, 42.3583])
+#      .addTo(@map)
+#    @marker.remove();
 
-#    @marker?.setMap null
-
-#    custom_point = new mapboxgl.Marker()
-#                   .addTo(@map)
-#
     if @points.length != 0
       _.each @points, (point) ->
-#        @map.addLayer (null)
-
-      @points.length = 0
+        point = {}
+#        @custom_point = point.Marker().setLngLat([-71.0603, 42.3583]).addTo(@map);
+#        @custom_point.remove();
+#        point.setMap null
 #
-    el = document.createElement('div');
-    el.className = 'marker'
-
-    ell = document.createElement('div');
-    ell.className = 'marker-dots'
+      @points.length = 0
 
     _.each @collection.current().get('history'), (point) =>
-      Lnglat = new mapboxgl.LngLat(point.lng, point.lat)
+        Lnglat = new mapboxgl.LngLat(point.lng, point.lat)
+        el = document.createElement('div');
+        el.className = 'marker-dots';
 
-      point = new mapboxgl.Marker(ell)
-        .addTo(@map)
+        point = new mapboxgl.Marker(el)
+          .setLngLat(Lnglat)
+          .addTo(@map)
 
-      @points.push point
-
-#      point = new google.maps.Marker
-#        position: latLng
-#        icon: '/assets/dot.png'
-#
-#      point.setMap @map
-
-#      @points.push point
-
-#      @points.push point
-
+        @points.push point
 
     center = @collection.current().get 'Lnglat'
-    popup = new mapboxgl.Popup()
-    .setHTML(@collection.current().get 'student_name');
 
-    @marker = new mapboxgl.Marker(el)
-              .setLngLat(center).setPopup(popup)
+    popup = new mapboxgl.Popup()
+      .setHTML(@collection.current().get 'student_name');
+
+    ell = document.createElement('div');
+    ell.className = 'marker';
+
+    @marker = new (mapboxgl.Marker)(ell)
+              .setLngLat(center)
+              .setPopup(popup)
               .addTo(@map)
 
-    @map.setCenter center
+    @map.flyTo({center: center});
+
 
   toggleAssignmentList: ->
     @$('.student-names').toggleClass 'closed'
