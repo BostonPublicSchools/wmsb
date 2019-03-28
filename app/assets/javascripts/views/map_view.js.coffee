@@ -48,7 +48,7 @@ Wmsb.Views.MapView = Backbone.View.extend
     _.bindAll this
 
     @busView    = @$('#bus-view')
-    @container      ='map-canvas'
+    @container  = 'map-canvas'
 
     @listenTo @collection, 'reset', @render
 
@@ -67,6 +67,8 @@ Wmsb.Views.MapView = Backbone.View.extend
       container: @container
       style: 'mapbox://styles/mapbox/streets-v11'
       center: @mapCenter()
+      dragRotate: false,
+      touchZoomRotate: true,
       zoom: 14
     }
 
@@ -80,20 +82,11 @@ Wmsb.Views.MapView = Backbone.View.extend
     @busView.html markup
 
   renderMarker: ->
-    console.log("Inside render Marker");
-    debugger
-#    @marker = (new (mapboxgl.Marker))
-#      .setLngLat([-71.0603, 42.3583])
-#      .addTo(@map)
-#    @marker.remove();
+    @marker?.remove()
 
     if @points.length != 0
       _.each @points, (point) ->
-        point = {}
-#        @custom_point = point.Marker().setLngLat([-71.0603, 42.3583]).addTo(@map);
-#        @custom_point.remove();
-#        point.setMap null
-#
+        point?.remove()
       @points.length = 0
 
     _.each @collection.current().get('history'), (point) =>
@@ -104,18 +97,15 @@ Wmsb.Views.MapView = Backbone.View.extend
         point = new mapboxgl.Marker(el)
           .setLngLat(Lnglat)
           .addTo(@map)
-
         @points.push point
 
     center = @collection.current().get 'Lnglat'
-
     popup = new mapboxgl.Popup()
       .setHTML(@collection.current().get 'student_name');
 
     ell = document.createElement('div');
     ell.className = 'marker';
-
-    @marker = new (mapboxgl.Marker)(ell)
+    @marker = new mapboxgl.Marker(ell)
               .setLngLat(center)
               .setPopup(popup)
               .addTo(@map)

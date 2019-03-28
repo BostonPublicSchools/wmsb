@@ -12,11 +12,10 @@
 
 .marker{
   background-image: url('/assets/bus-marker.svg');
-  //position: absolute;
   user-select: none;
   border: 0px;
   padding: 0px;
-  margin: 0px;
+  margin: -13px;
   width: 42px;
   height: 50px;
   overflow: hidden;
@@ -24,10 +23,9 @@
   opacity: 1;
   cursor: pointer;
   touch-action: none;
-  left: -21px;
-  top: -50px;
+  left: 13px !important;
+  top: -7px !important;
   z-index: 1000000;
-  -webkit-user-drag: none;
 }
 
 .marker-dots {
