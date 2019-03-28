@@ -12,6 +12,7 @@ gem 'simple_form'
 gem 'rack-cache'
 gem 'rails_autoscale_agent'
 gem 'terminal-table'
+gem 'mapbox-gl-rails'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'

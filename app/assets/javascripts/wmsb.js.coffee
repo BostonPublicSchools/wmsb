@@ -26,6 +26,7 @@ $ ->
     tmp = document.createElement 'div'
     text = document.getElementById('locations').innerHTML
     tmp.innerHTML = text
+    updateMapHeight()
 
     assignments = new Wmsb.Collections.BusAssignments JSON.parse(tmp.innerHTML)
     view = new Wmsb.Views.MapView
