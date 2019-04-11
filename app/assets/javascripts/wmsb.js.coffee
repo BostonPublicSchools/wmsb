@@ -39,6 +39,6 @@ $ ->
 
   if $canvas.length
     $(window).on 'resize', updateMapHeight
-    initialize()
     $canvas.resize()
+    initialize()
     updateMapHeight()
