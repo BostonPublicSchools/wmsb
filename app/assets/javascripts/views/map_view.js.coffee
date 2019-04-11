@@ -30,35 +30,25 @@ assignmentList = _.template """
 </div>
   """
 
+
 Wmsb.Views.MapView = Backbone.View.extend
+
   events:
     'click .select-students': 'toggleAssignmentList'
     'click .student-name': 'changeSelectedAssignment'
 
-  styles: [
-    stylers: [
-      { "saturation": -30 }
-      { "lightness": 31 }
-      { "weight": 0.4 }
-      { "gamma": 0.78 }
-      { "hue": "#3b97d3" }
-    ]
-  ]
-
   points: []
-
-  styledMap: ->
-    new google.maps.StyledMapType @styles, name: 'Boston Public Schools'
 
   mapCenter: ->
     current = @collection.current()
-    if current? then current.get('latLng') else new google.maps.LatLng(42.3583, -71.0603)
+    if current? then current.get('Lnglat') else new mapboxgl.LngLat(-71.0603, 42.3583)
+
 
   initialize: (options) ->
     _.bindAll this
 
     @busView    = @$('#bus-view')
-    @mapEl      = document.getElementById 'map-canvas'
+    @container  = 'map-canvas'
 
     @listenTo @collection, 'reset', @render
 
@@ -73,15 +63,18 @@ Wmsb.Views.MapView = Backbone.View.extend
     console.log($('#map-interval').data('map-timeout'))
 
   renderMap: ->
-    @map = new google.maps.Map @mapEl, {
+    mapboxgl.accessToken = window.mapbox_token
+    @map = new mapboxgl.Map {
+      container: @container
+      style: 'mapbox://styles/mapbox/streets-v11'
       center: @mapCenter()
+      dragRotate: false,
+      touchZoomRotate: true,
       zoom: 14
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-      disableDefaultUI: true
-      panControl: !Modernizr.touch
-      zoomControl: true
     }
-    @map.mapTypes.set 'wmsb', @styledMap()
+
+    #Add zoom and rotation controls to the map.
+    @map.addControl(new mapboxgl.NavigationControl());
 
   renderHeader: ->
     markup = assignmentList
@@ -90,33 +83,36 @@ Wmsb.Views.MapView = Backbone.View.extend
     @busView.html markup
 
   renderMarker: ->
-    @marker?.setMap null
+    @marker?.remove()
 
     if @points.length != 0
       _.each @points, (point) ->
-        point.setMap null
-
+        point?.remove()
       @points.length = 0
 
     _.each @collection.current().get('history'), (point) =>
-      latLng = new google.maps.LatLng point.lat, point.lng
+      Lnglat = new mapboxgl.LngLat(point.lng, point.lat)
+      el = document.createElement('div');
+      el.className = 'marker-dots';
 
-      point = new google.maps.Marker
-        position: latLng
-        icon: '/assets/dot.png'
-
-      point.setMap @map
+      point = new mapboxgl.Marker(el)
+        .setLngLat(Lnglat)
+        .addTo(@map)
       @points.push point
 
-    center = @collection.current().get 'latLng'
-    @marker = new google.maps.Marker
-      position: center
-      map: @map
-      title: @collection.current().get 'student_name'
-      icon: '/assets/bus-marker.svg'
-      zIndex: google.maps.Marker.MAX_ZINDEX
+    center = @collection.current().get 'Lnglat'
+    popup = new mapboxgl.Popup()
+      .setHTML(@collection.current().get 'student_name');
 
-    @map.setCenter center
+    ell = document.createElement('div');
+    ell.className = 'marker';
+    @marker = new mapboxgl.Marker(ell)
+      .setLngLat(center)
+      .setPopup(popup)
+      .addTo(@map)
+
+    @map.flyTo({center: center});
+
 
   toggleAssignmentList: ->
     @$('.student-names').toggleClass 'closed'
@@ -140,3 +136,4 @@ Wmsb.Views.MapView = Backbone.View.extend
     window.location.hash = assignment.get('token')
 
     @render()
+
