@@ -13,11 +13,26 @@ class SessionsController < ApplicationController
       session[:current_assignment] = Digest::SHA512.hexdigest(@session.studentNo).first(20)
       session[:parentLastName] = @session.parentLastName
       session[:studentNo] = @session.studentNo
-      cookies[:parentLastName] = @session.parentLastName
-      cookies[:studentNo] = @session.studentNo
-      cookies[:month] = @session.studentDob.month
-      cookies[:date] = @session.studentDob.day
-      cookies[:year] = @session.studentDob.year
+      cookies[:parentLastName] = {
+          value: @session.parentLastName,
+          expires: expire_cookie
+      }
+      cookies[:studentNo] = {
+          value: @session.studentNo,
+          expires: expire_cookie
+      }
+      cookies[:month] = {
+          value: @session.studentDob.month,
+          expires: expire_cookie
+      }
+      cookies[:date] = {
+          value: @session.studentDob.day,
+          expires: expire_cookie
+      }
+      cookies[:year] = {
+          value: @session.studentDob.year,
+          expires: expire_cookie
+      }
       redirect_to buses_path(anchor: session[:current_assignment])
 
     else
@@ -32,6 +47,10 @@ class SessionsController < ApplicationController
     session.delete(:signed_in_at)
 
     redirect_to root_path, notice: 'You have been logged out'
+  end
+
+  def expire_cookie
+    9.months.from_now
   end
 
   private
