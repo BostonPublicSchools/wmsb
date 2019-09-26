@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.1.2'
+ruby '2.2.6'
 
 gem 'rails', '3.2.16'
 gem 'haml'
@@ -13,6 +13,7 @@ gem 'rack-cache'
 gem 'rails_autoscale_agent'
 gem 'terminal-table'
 gem 'mapbox-gl-rails'
+gem 'test-unit'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
