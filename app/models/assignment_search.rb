@@ -32,10 +32,6 @@ class AssignmentSearch
           studentNo: @aspen_contact_id,
           tripFlag: tripflag
       )
-
-      if !response.success?
-        @errors.add(:assignments, :missing)
-      end
       response.success? ? response.body : nil
     end
 
@@ -57,6 +53,7 @@ class AssignmentSearch
         BusAssignment.new(assignment, trip_flag)
       end
     else
+      @errors.add(:assignments, :missing)
       @assignments = []
     end
     return self
