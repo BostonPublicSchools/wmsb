@@ -24,7 +24,6 @@ module Zonar
     if buses_rake_task == "true"
       return response_body
     end
-    response_body = cached_response(:locations, bus_id, params)
     if !response_body.nil?
       response_attributes = Hash.from_xml(response_body)
       attributes = response_attributes.try(:[], 'currentlocations').try(:[], 'asset')
@@ -49,7 +48,6 @@ module Zonar
       endtime: Time.zone.now.to_i
     )
     response_body = cached_response(:history, bus_id, params)
-
     if response_body.present?
       response_attributes = JSON.parse(response_body)
       assets = response_attributes.try(:[], 'pathevents').try(:[], 'assets')
