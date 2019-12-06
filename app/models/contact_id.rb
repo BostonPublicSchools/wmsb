@@ -34,7 +34,6 @@ class ContactId
         studentNo: studentNo,
         studentDob: formatted_date_of_birth,
         )
-
     @contact_id = response.body.gsub('"', '')
     if @contact_id.include?("true") && response.success?
       # The response is not a proper JSON object so JSON.parse('"000"') will

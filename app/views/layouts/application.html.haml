@@ -13,8 +13,8 @@
     = javascript_include_tag 'application'
     = csrf_meta_tags
 
-    %script{:src => "https://api.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.js", type: 'text/javascript'}
-    %link{:href => "https://api.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.css", :rel => "stylesheet", :type => 'text/css'}
+    %script{:src => "https://api.mapbox.com/mapbox-gl-js/v1.4.0/mapbox-gl.js", type: 'text/javascript'}
+    %link{:href => "https://api.mapbox.com/mapbox-gl-js/v1.4.0/mapbox-gl.css", :rel => "stylesheet", :type => 'text/css'}
 
     :javascript
       window.mapbox_token = "#{ENV['MAPBOX_TOKEN']}"
