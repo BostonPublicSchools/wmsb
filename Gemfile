@@ -12,7 +12,7 @@ gem 'simple_form'
 gem 'rack-cache'
 gem 'rails_autoscale_agent'
 gem 'terminal-table'
-gem 'mapbox-gl-rails', '~> 1.4'
+gem 'mapbox-gl-rails', '~> 1.6', '>= 1.6.1'
 gem 'test-unit'
 
 group :assets do
