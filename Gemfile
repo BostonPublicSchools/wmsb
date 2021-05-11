@@ -1,8 +1,12 @@
 source 'https://rubygems.org'
 
-ruby '2.1.2'
+# ruby '2.1.2'
 
-gem 'rails', '3.2.16'
+# gem 'rails', '3.2.16'
+
+ruby '2.5.1'
+gem 'rails', '4.2.11.3'
+
 gem 'haml'
 gem 'faraday'
 gem 'active_model_serializers'
@@ -14,16 +18,19 @@ gem 'rails_autoscale_agent'
 gem 'terminal-table'
 gem 'mapbox-gl-rails', '~> 1.6', '>= 1.6.1'
 gem 'test-unit'
+gem 'sprockets', '~>3.0'
+gem 'responders', '~> 2.0'
+gem 'byebug'
 
 group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
+  gem 'sass-rails'#,   '~> 3.2.3'
+  gem 'coffee-rails'#, '~> 3.2.1'
   gem 'bourbon'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platforms => :ruby
 
-  gem 'uglifier', '>= 1.0.3'
+  gem 'uglifier', '~> 3.2.0'
   gem 'jquery-rails'
 end
 
