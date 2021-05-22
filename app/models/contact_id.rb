@@ -2,6 +2,7 @@ class ContactId
   extend ActiveModel::Naming
   include ActiveModel::Conversion
   include ActiveModel::Validations
+  include ActiveModel::Model
 
   CLIENT_CODE = "wmsb".freeze
 
